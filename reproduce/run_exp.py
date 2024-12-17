@@ -24,6 +24,8 @@ from peft.tuners.lora.layer import Linear as LoraLinear
 
 log = logging.getLogger(__name__)
 
+os.environ['HYDRA_FULL_ERROR'] = '1'
+wandb login --relogin b1d7e377bf3fc7af261c70d7423b3ff33e146480
 
 def seed_everything(seed: int):
     import random, os
