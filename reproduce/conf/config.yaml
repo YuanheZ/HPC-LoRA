@@ -10,4 +10,4 @@ hydra:
   sweeper:
     params:
       ++dataset_name: cola
-      ++seed: 0
+      ++seed: 3
