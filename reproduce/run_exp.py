@@ -168,20 +168,14 @@ def reinit_lora_modules(name, module, init_config, **kwargs):
         V = V.T
         # set direction
         if init_config.direction == "OS-LoRA-Full":
-            B = U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r]))
-            A = torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :]
+            B = U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r])) / torch.sqrt(S[0])
+            A = torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :] / torch.sqrt(S[0])
         elif init_config.direction == "LoRA-GA":
             B = U[:, lora_r : 2 * lora_r]
             A = V[:lora_r, :]
         elif init_config.direction == "OS-LoRA-A":
             B = torch.zeros_like(U[:, :lora_r])
-            A = torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :]
-        elif init_config.direction == "OS-LoRA-B":
-            B = U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r]))
-            A = torch.zeros_like(V[:lora_r, :])
-        elif init_config.direction == "OS-LoRA-AB":
-            B = U[:, :lora_r] @ torch.diag(torch.sqrt(S[:lora_r])) @ torch.diag(S[:lora_r])
-            A = torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :]
+            A = torch.diag(torch.sqrt(S[:lora_r])) @ V[:lora_r, :] / torch.sqrt(S[0])
         scaling_factor = module.scaling["default"]
         if init_config.scale == "gd":
             A = A / scaling_factor
